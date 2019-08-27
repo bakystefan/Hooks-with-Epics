@@ -34,7 +34,6 @@ class InitScreen extends Component {
           style={styles.buttonStyle}
           onPress={() => {
             start();
-            navigate('QuestionsScreen');
           }}>
           <Text style={styles.textStyle}>START</Text>
         </TouchableOpacity>

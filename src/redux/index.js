@@ -20,7 +20,7 @@ if (__DEV__) {
   });
 
   middlewares.push(logger);
-};
+}
 
 const store = createStore(
   combineReducers({

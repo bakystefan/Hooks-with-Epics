@@ -1,53 +1,45 @@
-import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  ScrollView
-} from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 /* Packages */
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import CheckBox from 'react-native-check-box'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import CheckBox from 'react-native-check-box';
 /* Actions */
-import { getAnswersStart, finished } from '../../redux/quizState';
+import {getAnswers, finished} from '../../redux/quizState';
 
-const mainActions = { getAnswersStart, finished };
+const mainActions = {
+  getAnswersAction: getAnswers,
+  finishedAction: finished,
+};
 
 class QuestionsScreen extends Component {
-
   componentDidUpdate(prevProps) {
-    console.log("JA SAM PROSP ", this.props);
-    const { questions, answersNumber } = this.props;
+    const {questions, answersNumber} = this.props;
     if (questions.length === answersNumber) {
       const {
-        navigation: {
-          navigate
-        },
-        finished
+        navigation: {navigate},
+        finishedAction,
       } = this.props;
-      finished();
+      finishedAction();
       navigate('LastScreen');
     }
   }
 
   renderQuestion = (question, key, isCheckedTrue, isCheckedFalse) => (
-    <View
-      style={styles.questionWrapper}
-      key={key}
-    >
-      <Text style={styles.questionText}>{`${key + 1} ${decodeURIComponent(question)}`}</Text>
-      <View style={{ flex: 1, flexDirection: 'row' }}>
+    <View style={styles.questionWrapper} key={key}>
+      <Text style={styles.questionText}>
+        {`${key + 1} ${decodeURIComponent(question)}`}
+      </Text>
+      <View style={styles.rowQuestion}>
         <CheckBox
           style={styles.checkBox}
-          onClick={() => this.props.getAnswersStart(key, true, 'Yes')}
+          onClick={() => this.props.getAnswersAction(key, true, 'Yes')}
           isChecked={isCheckedTrue}
           rightText="Yes"
         />
         <CheckBox
           style={styles.checkBox}
-          onClick={() => this.props.getAnswersStart(key, false, 'No')}
+          onClick={() => this.props.getAnswersAction(key, false, 'No')}
           isChecked={isCheckedFalse}
           rightText="No"
         />
@@ -56,22 +48,18 @@ class QuestionsScreen extends Component {
   );
 
   render() {
-    const {
-      questions,
-      navigation: {
-        navigate
-      }
-    } = this.props;
+    const {questions} = this.props;
     return (
-      <ScrollView
-        contentContainerStyle={styles.conainer}
-      >
+      <ScrollView contentContainerStyle={styles.conainer}>
         <Text>Good luck</Text>
-        {
-          questions.map((item, key) =>
-            this.renderQuestion(item.question, key, item.isCheckedTrue, item.isCheckedFalse)
-          )
-        }
+        {questions.map((item, key) =>
+          this.renderQuestion(
+            item.question,
+            key,
+            item.isCheckedTrue,
+            item.isCheckedFalse,
+          ),
+        )}
       </ScrollView>
     );
   }
@@ -82,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   questionWrapper: {
     flex: 1,
@@ -94,14 +83,18 @@ const styles = StyleSheet.create({
   checkBox: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+  },
+  rowQuestion: {
+    flex: 1,
+    flexDirection: 'row',
   },
 });
 
 export default connect(
-  ({ quizState }) => ({
+  ({quizState}) => ({
     questions: quizState.questions,
-    answersNumber: quizState.answersNumber
+    answersNumber: quizState.answersNumber,
   }),
-  dispatch => bindActionCreators(mainActions, dispatch)
+  dispatch => bindActionCreators(mainActions, dispatch),
 )(QuestionsScreen);
