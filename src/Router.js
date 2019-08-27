@@ -1,12 +1,10 @@
 import {
   InitScreen,
   QuestionsScreen,
-  LastScreen
+  LastScreen,
+  QuestionScreenHooks,
 } from './screen';
-import {
-  createStackNavigator,
-  createAppContainer
-} from 'react-navigation';
+import {createStackNavigator, createAppContainer} from 'react-navigation';
 
 const AppStack = createStackNavigator(
   {
@@ -18,6 +16,12 @@ const AppStack = createStackNavigator(
     },
     QuestionsScreen: {
       screen: QuestionsScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    QuestionScreenHooks: {
+      screen: QuestionScreenHooks,
       navigationOptions: {
         header: null,
       },
@@ -34,4 +38,4 @@ const AppStack = createStackNavigator(
   },
 );
 
-export default Router = createAppContainer(AppStack);
+export default createAppContainer(AppStack);

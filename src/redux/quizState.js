@@ -15,6 +15,7 @@ export const RESET_ALL = 'quiz/RESET_ALL';
 
 import moment from 'moment';
 import Api from '../helper/Api';
+import {transform} from '../helper/transform';
 
 const apiFetch = new Api();
 
@@ -53,7 +54,6 @@ export default (state = initState, {type, payload}) => {
         questions: payload,
         answersNumber: payload.filter(item => item.isAnswered).length,
         score: payload.filter(item => {
-          console.log("JA SAM ITEM ", item.correct_answer === item.answer, item.correct_answer, item.answer);
           return item.correct_answer === item.answer;
         }).length,
       };
@@ -83,7 +83,7 @@ export const finished = () => ({
   payload: moment(),
 });
 
-export const getAnswersStart = (id, answer, responseType) => ({
+export const getAnswers = (id, answer, responseType) => ({
   type: ANSWER_SET_START,
   payload: {
     id,
@@ -110,7 +110,7 @@ export const getQuestions = action$ =>
     }),
     map(action => ({
       type: GET_QUESTIONS_SUCCESS,
-      payload: action.data.results,
+      payload: transform(action.data.results),
     })),
   );
 
@@ -119,7 +119,6 @@ export const questionAnswer = (action$, store) =>
     ofType(ANSWER_SET_START),
     map(({payload}) => {
       const {id, answer, responseType} = payload;
-      console.log("JA SAM ANSWER ", answer, payload);
       const {quizState} = store.value;
       const {questions} = quizState;
       const withAnswer = questions.map((item, index) => {
@@ -135,7 +134,6 @@ export const questionAnswer = (action$, store) =>
         }
         return item;
       });
-      console.log("with answer",withAnswer)
       return {
         type: ANSWER_SET,
         payload: withAnswer,
