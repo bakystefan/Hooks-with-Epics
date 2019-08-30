@@ -16,15 +16,6 @@ const AppStack = createStackNavigator(
     },
     QuestionsScreen: {
       screen: QuestionsScreen,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    QuestionScreenHooks: {
-      screen: QuestionScreenHooks,
-      navigationOptions: {
-        header: null,
-      },
     },
     LastScreen: {
       screen: LastScreen,
